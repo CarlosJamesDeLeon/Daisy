@@ -78,19 +78,19 @@ export default function DaisyApp() {
   return (
     <div
       className="relative min-h-screen w-full overflow-hidden"
-      style={{ backgroundColor: '#FAF9F6', color: '#4A5D4E' }}
+      style={{ backgroundColor: '#FFF0F5', color: '#7C3D55' }}
     >
       {/* Ambient radial glow */}
       <div
         className="pointer-events-none fixed inset-0 z-0"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,197,71,0.07) 0%, transparent 70%), radial-gradient(ellipse 60% 80% at 80% 100%, rgba(74,93,78,0.07) 0%, transparent 70%)',
+            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(244,160,192,0.09) 0%, transparent 70%), radial-gradient(ellipse 60% 80% at 80% 100%, rgba(196,127,232,0.09) 0%, transparent 70%)',
         }}
       />
 
-      {/* Vine corners — always present */}
-      <VineCorners />
+      {/* Vine corners — entry only */}
+      {stage === 'entry' && <VineCorners />}
 
       {/* Stage transitions */}
       <AnimatePresence mode="wait" custom={direction}>

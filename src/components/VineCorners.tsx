@@ -15,7 +15,7 @@ function TinyFlower({
       transition={{ delay, duration: 0.6, ease: 'easeOut' }}
       style={{ transformOrigin: `${cx}px ${cy}px` }}
     >
-      {/* 4 petals — soft apricot */}
+      {/* 4 petals — rosy pink */}
       {[0, 90, 180, 270].map((angle) => (
         <ellipse
           key={angle}
@@ -23,13 +23,13 @@ function TinyFlower({
           cy={cy + Math.sin((angle * Math.PI) / 180) * r * 0.95}
           rx={r * 0.75}
           ry={r * 0.45}
-          fill="#EED7B8"
-          opacity={0.88}
+          fill="#F9B8D0"
+          opacity={0.9}
           transform={`rotate(${angle}, ${cx + Math.cos((angle * Math.PI) / 180) * r * 0.95}, ${cy + Math.sin((angle * Math.PI) / 180) * r * 0.95})`}
         />
       ))}
-      {/* muted gold center */}
-      <circle cx={cx} cy={cy} r={r * 0.42} fill="#DDAA66" opacity={0.95} />
+      {/* warm rose-gold center */}
+      <circle cx={cx} cy={cy} r={r * 0.42} fill="#E8647A" opacity={0.9} />
     </motion.g>
   )
 }
@@ -44,7 +44,7 @@ function Leaf({
       cy={y}
       rx={size}
       ry={size * 0.45}
-      fill="#A8C3B5"
+      fill="#5DAA6A"
       opacity={0.55}
       transform={`rotate(${angle}, ${x}, ${y})`}
       initial={{ scale: 0, opacity: 0 }}
@@ -121,61 +121,61 @@ function VineCorner({
           {/* thick base */}
           <path
             d="M10,0 C18,30 8,55 22,90 C36,125 18,155 12,195 C8,220 14,250 6,280"
-            stroke="#A8C3B5"
+            stroke="#5DAA6A"
             strokeWidth="2.2"
             strokeLinecap="round"
-            opacity="0.55"
+            opacity="0.5"
           />
           {/* thinner overlay for taper feel */}
           <path
             d="M10,0 C18,30 8,55 22,90 C36,125 18,155 12,195 C8,220 14,250 6,280"
-            stroke="#A8C3B5"
+            stroke="#5DAA6A"
             strokeWidth="1"
             strokeLinecap="round"
-            opacity="0.3"
+            opacity="0.28"
           />
 
           {/* Main horizontal vine */}
           <path
             d="M0,10 C35,18 65,8 105,22 C145,36 175,18 215,12 C240,8 268,14 295,6"
-            stroke="#A8C3B5"
+            stroke="#5DAA6A"
             strokeWidth="2.2"
             strokeLinecap="round"
-            opacity="0.55"
+            opacity="0.5"
           />
           <path
             d="M0,10 C35,18 65,8 105,22 C145,36 175,18 215,12 C240,8 268,14 295,6"
-            stroke="#A8C3B5"
+            stroke="#5DAA6A"
             strokeWidth="1"
             strokeLinecap="round"
-            opacity="0.3"
+            opacity="0.28"
           />
 
           {/* Branch 1 — off vertical vine at ~y=90 */}
           <path
             d="M22,90 C35,80 52,82 65,72 C78,62 80,48 95,42"
-            stroke="#A8C3B5"
+            stroke="#5DAA6A"
             strokeWidth="1.6"
             strokeLinecap="round"
-            opacity="0.45"
+            opacity="0.42"
           />
 
           {/* Branch 2 — off vertical vine at ~y=155 */}
           <path
             d="M12,155 C28,148 44,152 58,140"
-            stroke="#A8C3B5"
+            stroke="#5DAA6A"
             strokeWidth="1.4"
             strokeLinecap="round"
-            opacity="0.4"
+            opacity="0.38"
           />
 
           {/* Branch 3 — off horizontal vine at ~x=105 */}
           <path
             d="M105,22 C100,38 108,54 96,68"
-            stroke="#A8C3B5"
+            stroke="#5DAA6A"
             strokeWidth="1.4"
             strokeLinecap="round"
-            opacity="0.4"
+            opacity="0.38"
           />
 
           {/* ---- Leaves ---- */}
@@ -219,7 +219,7 @@ function DappledLight({
         background: useTransform(
           [springX, springY],
           ([x, y]: number[]) =>
-            `radial-gradient(600px circle at ${(x * 0.5 + 0.5) * 100}% ${(y * 0.5 + 0.5) * 100}%, rgba(255,249,229,0.1) 0%, transparent 65%)`
+            `radial-gradient(600px circle at ${(x * 0.5 + 0.5) * 100}% ${(y * 0.5 + 0.5) * 100}%, rgba(255,210,230,0.14) 0%, transparent 65%)`
         ),
       }}
     />
