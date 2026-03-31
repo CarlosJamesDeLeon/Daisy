@@ -14,6 +14,14 @@ interface SavedBouquet {
   items: any[]
   date: string
   previewEmoji: string
+  name?: string
+  tagline?: string
+  mood?: string
+  recipe?: string[]
+  emoji?: string
+  gradient?: string
+  accentColor?: string
+  textColor?: string
 }
 
 const pageVariants = {
@@ -56,14 +64,35 @@ export default function DaisyApp() {
   const saveBouquetToGallery = (items: any[]) => {
     if (items.length === 0) return
 
+    const counts: Record<string, { count: number, name: string }> = {}
+    items.forEach(item => {
+      if (!counts[item.id]) counts[item.id] = { count: 0, name: item.name }
+      counts[item.id].count++
+    })
+    const recipe = Object.values(counts).map(c => `${c.name} ×${c.count}`)
+
     const newBouquet: SavedBouquet = {
       id: `saved-${Date.now()}`,
       items: [...items],
       date: new Date().toLocaleDateString(),
-      previewEmoji: items[items.length - 1].emoji || '🌿',
+      previewEmoji: items[items.length - 1]?.emoji || '🌿',
+      name: 'Custom Studio Bouquet',
+      tagline: 'Handpicked Composition',
+      mood: 'Personal · Unique',
+      recipe,
+      emoji: items[items.length - 1]?.emoji || '🌿',
+      gradient: 'linear-gradient(155deg, #FFF0F5 0%, #F8E0E8 40%, #F0D0E0 100%)',
+      accentColor: '#C05070',
+      textColor: '#7C3D55',
     }
 
     const updated = [newBouquet, ...savedBouquets]
+    setSavedBouquets(updated)
+    localStorage.setItem('daisy-keepsakes', JSON.stringify(updated))
+  }
+
+  const deleteBouquet = (id: string) => {
+    const updated = savedBouquets.filter(b => b.id !== id)
     setSavedBouquets(updated)
     localStorage.setItem('daisy-keepsakes', JSON.stringify(updated))
   }
@@ -112,6 +141,7 @@ export default function DaisyApp() {
               onBack={() => goTo('entry')}
               onBuild={() => goTo('studio')}
               savedBouquets={savedBouquets}
+              onDelete={deleteBouquet}
             />
           )}
           {stage === 'studio' && (

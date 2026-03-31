@@ -459,6 +459,13 @@ function DaisySVGButton({ onClick }: { onClick: () => void }) {
             <stop offset="100%" stopColor="#FFB8CC" stopOpacity="0" />
           </radialGradient>
 
+          {/* ── Pistil — soft golden centre, no hard disc ── */}
+          <radialGradient id="pistil" cx="40%" cy="35%" r="65%">
+            <stop offset="0%"   stopColor="#FFF3A0" stopOpacity="0.95" />
+            <stop offset="50%"  stopColor="#F5D040" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#E8A800" stopOpacity="0"    />
+          </radialGradient>
+
           {/* Per-petal shadow: each petal casts a gentle shadow on its neighbours */}
           <filter id="ps" x="-40%" y="-40%" width="180%" height="180%">
             <feDropShadow dx="0" dy="1.2" stdDeviation="1.8"
@@ -519,6 +526,14 @@ function DaisySVGButton({ onClick }: { onClick: () => void }) {
             cx={0} cy={0}
             fill="url(#centreGlow)"
             animate={{ r: hovered ? 18 : 15 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          />
+
+          {/* ── Pistil ── */}
+          <motion.circle
+            cx={0} cy={0}
+            fill="url(#pistil)"
+            animate={{ r: hovered ? 13 : 11 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           />
 

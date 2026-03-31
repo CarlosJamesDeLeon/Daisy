@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Heart, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Heart, Sparkles, Trash2 } from 'lucide-react'
 
 // ─────────────────────────────────────────────
 // Inline SVG flower illustrations per template
@@ -360,11 +360,13 @@ function BouquetCard({
   onSelect,
   index,
   isSmall = false,
+  onDelete,
 }: {
   bouquet: any
   onSelect: () => void
   index: number
   isSmall?: boolean
+  onDelete?: () => void
 }) {
   const [hovered, setHovered] = useState(false)
   const tc = bouquet.textColor || '#3A2A1A'
@@ -420,8 +422,8 @@ function BouquetCard({
             transition={{ duration: 0.4, ease: 'easeOut' }}
           >
             {isSmall
-              ? <div style={{ fontSize: '3.5rem' }}>{bouquet.emoji}</div>
-              : (ILLUSTRATIONS[bouquet.id] || <div style={{ fontSize: '4rem' }}>{bouquet.emoji}</div>)
+              ? <div style={{ fontSize: '3.5rem' }}>{bouquet.emoji || bouquet.previewEmoji || '🌿'}</div>
+              : (ILLUSTRATIONS[bouquet.id] || <div style={{ fontSize: '4rem' }}>{bouquet.emoji || bouquet.previewEmoji || '🌿'}</div>)
             }
           </motion.div>
         </div>
@@ -455,15 +457,26 @@ function BouquetCard({
         animate={{ opacity: hovered ? 1 : 0 }}
         transition={{ duration: 0.3 }}
       >
+        {onDelete && (
+          <motion.button
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="absolute top-4 right-4 flex items-center justify-center rounded-full w-8 h-8"
+            style={{ background: 'rgba(220,50,50,0.1)', color: '#D32F2F', border: 'none', cursor: 'pointer' }}
+            whileHover={{ scale: 1.1, background: 'rgba(220,50,50,0.2)' }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Trash2 size={14} />
+          </motion.button>
+        )}
         <div>
           <p style={{ fontSize: '0.5rem', letterSpacing: '0.25em', color: '#8A6A50', opacity: 0.7, textTransform: 'uppercase', marginBottom: '8px' }}>
             ✦  Recipe
           </p>
           <h3 className="font-serif mb-4" style={{ fontSize: '1.2rem', fontStyle: 'italic', color: '#3A2010' }}>
-            {bouquet.name}
+            {bouquet.name || 'My Keepsake'}
           </h3>
           <ul className="space-y-2.5">
-            {bouquet.recipe.map((r: string, i: number) => (
+            {bouquet.recipe?.map((r: string, i: number) => (
               <li key={i} className="flex items-center gap-2.5 font-sans" style={{ fontSize: '0.72rem', color: '#4A3020', opacity: 0.85 }}>
                 <div className="rounded-full flex-shrink-0" style={{ width: '4px', height: '4px', backgroundColor: ac }} />
                 {r}
@@ -580,10 +593,12 @@ export default function GalleryStage({
   onBack,
   onBuild,
   savedBouquets = [],
+  onDelete,
 }: {
   onBack: () => void
   onBuild: () => void
   savedBouquets?: any[]
+  onDelete?: (id: string) => void
 }) {
   return (
     <div
@@ -833,7 +848,14 @@ export default function GalleryStage({
           ) : (
             <div className="flex flex-wrap gap-6 justify-center xl:justify-start">
               {savedBouquets.map((b, i) => (
-                <BouquetCard key={b.id} bouquet={b} onSelect={() => { }} index={i} isSmall />
+                <BouquetCard 
+                  key={b.id} 
+                  bouquet={b} 
+                  onSelect={() => { }} 
+                  index={i} 
+                  isSmall 
+                  onDelete={onDelete ? () => onDelete(b.id) : undefined} 
+                />
               ))}
             </div>
           )}
