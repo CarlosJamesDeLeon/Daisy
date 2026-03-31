@@ -3,6 +3,17 @@
 import { motion, useAnimationFrame, useMotionValue } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 
+// Load Cormorant Garamond for the elegant Daisy title
+const fontLink = typeof document !== 'undefined' && (() => {
+  if (!document.querySelector('#cormorant-font')) {
+    const link = document.createElement('link')
+    link.id = 'cormorant-font'
+    link.rel = 'stylesheet'
+    link.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400&display=swap'
+    document.head.appendChild(link)
+  }
+})()
+
 // ─────────────────────────────────────────────
 // Tiny floating petal (random slow drift)
 // ─────────────────────────────────────────────
@@ -90,7 +101,6 @@ function Rose({ cx, cy, r = 22, color = '#E8647A', delay = 0 }: {
     { rx: r * 0.5, ry: r * 0.27, dx: 0, dy: r * 0.9, angle: 180 },
     { rx: r * 0.48, ry: r * 0.28, dx: -r * 0.75, dy: r * 0.3, angle: 250 },
     { rx: r * 0.5, ry: r * 0.27, dx: -r * 0.8, dy: -r * 0.55, angle: 305 },
-    // inner petals
     { rx: r * 0.33, ry: r * 0.2, dx: 0, dy: -r * 0.55, angle: 0 },
     { rx: r * 0.3, ry: r * 0.19, dx: r * 0.48, dy: r * 0.18, angle: 120 },
     { rx: r * 0.3, ry: r * 0.19, dx: -r * 0.48, dy: r * 0.18, angle: 240 },
@@ -167,7 +177,6 @@ function Dahlia({ cx, cy, r = 26, color = '#FF8C5A', delay = 0 }: {
 }) {
   const layers = [14, 10, 7]
   const radii = [r, r * 0.65, r * 0.38]
-  const lightColor = color.replace(/[\d.]+(?=\))|#\w{6}/, (m) => m)
   return (
     <motion.g
       initial={{ scale: 0, opacity: 0 }}
@@ -213,7 +222,6 @@ function Orchid({ cx, cy, r = 22, color = '#C47FE8', delay = 0 }: {
       transition={{ delay, duration: 0.9, ease: 'easeOut' }}
       style={{ transformOrigin: `${cx}px ${cy}px` }}
     >
-      {/* 3 dorsal / lateral sepals */}
       {[[-90], [30], [150]].map(([angle], i) => {
         const rad = (angle * Math.PI) / 180
         return (
@@ -229,7 +237,6 @@ function Orchid({ cx, cy, r = 22, color = '#C47FE8', delay = 0 }: {
           />
         )
       })}
-      {/* 2 lateral petals */}
       {[[-30], [210]].map(([angle], i) => {
         const rad = (angle * Math.PI) / 180
         return (
@@ -245,7 +252,6 @@ function Orchid({ cx, cy, r = 22, color = '#C47FE8', delay = 0 }: {
           />
         )
       })}
-      {/* lip / labellum */}
       <ellipse cx={cx} cy={cy + r * 0.22} rx={r * 0.32} ry={r * 0.38} fill="#f0c6ff" opacity={0.95} />
       <circle cx={cx} cy={cy + r * 0.06} r={r * 0.11} fill="#8e3db5" opacity={0.7} />
     </motion.g>
@@ -265,7 +271,6 @@ function Tulip({ cx, cy, r = 20, color = '#F4507A', delay = 0 }: {
       transition={{ delay, duration: 0.85, ease: 'easeOut' }}
       style={{ transformOrigin: `${cx}px ${cy}px` }}
     >
-      {/* 3 outer petals */}
       {[[-35, 0], [0, -r * 0.95], [35, 0]].map(([rx2, dy], i) => (
         <ellipse
           key={i}
@@ -278,9 +283,7 @@ function Tulip({ cx, cy, r = 20, color = '#F4507A', delay = 0 }: {
           transform={`rotate(${rx2}, ${cx + (i === 0 ? -r * 0.55 : i === 2 ? r * 0.55 : 0)}, ${cy + dy + (i === 1 ? 0 : r * 0.15)})`}
         />
       ))}
-      {/* inner lighter accent */}
       <ellipse cx={cx} cy={cy - r * 0.38} rx={r * 0.25} ry={r * 0.45} fill="#ffd0de" opacity={0.65} />
-      {/* stem hint */}
       <line x1={cx} y1={cy + r * 0.55} x2={cx} y2={cy + r * 1.5} stroke="#6aad6e" strokeWidth={2} opacity={0.55} />
     </motion.g>
   )
@@ -311,16 +314,13 @@ function FlowerScene() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <svg width="100%" height="100%" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
         {/* ── Left bouquet cluster ── */}
-        {/* stems */}
         <path d="M100,900 C110,750 85,650 120,520" stroke="#6aad6e" strokeWidth="2" opacity="0.45" />
         <path d="M140,900 C148,760 130,670 155,545" stroke="#6aad6e" strokeWidth="2" opacity="0.4" />
         <path d="M75,900 C80,780 65,690 90,580" stroke="#6aad6e" strokeWidth="1.5" opacity="0.35" />
-        {/* flowers */}
         <Peony cx={120} cy={510} r={36} color="#F9B8D0" delay={0.4} />
         <Rose cx={65} cy={570} r={26} color="#E8647A" delay={0.6} />
         <Tulip cx={160} cy={535} r={22} color="#FF6699" delay={0.8} />
         <Dahlia cx={95} cy={490} r={20} color="#FFB347" delay={1.0} />
-        {/* leaves */}
         <ellipse cx={108} cy={600} rx={18} ry={9} fill="#7DC87D" opacity={0.5} transform="rotate(-30, 108, 600)" />
         <ellipse cx={148} cy={620} rx={15} ry={7} fill="#7DC87D" opacity={0.45} transform="rotate(25, 148, 620)" />
 
@@ -361,92 +361,189 @@ function FlowerScene() {
 }
 
 // ─────────────────────────────────────────────
-// Daisy SVG Button (enhanced)
+// Daisy SVG Button — no disc, pure white petals
 // ─────────────────────────────────────────────
 function DaisySVGButton({ onClick }: { onClick: () => void }) {
+  const [hovered, setHovered] = useState(false)
+
+  const PETAL_COUNT = 22
+  const PETAL_RX = 7.5   // broad, real-daisy width
+  const PETAL_RY = 20    // length
+  // Petals originate from the very centre — they all meet at (0,0)
+  const PETAL_CY = -(PETAL_RY + 1)  // ellipse center along the up-axis
+
   return (
     <motion.button
       onClick={onClick}
-      className="group relative flex flex-col items-center gap-5 bg-transparent border-none cursor-pointer"
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      className="relative flex flex-col items-center gap-5 bg-transparent border-none cursor-pointer"
       style={{ outline: 'none' }}
-      whileHover="hovered"
-      initial="rest"
     >
-      {/* Glow ring behind daisy */}
+
+      {/* ── Layer 1: soft blush shadow pool beneath the flower ── */}
+      {/* This is what makes a white flower visible — a warm coloured shadow below it */}
       <motion.div
-        className="absolute rounded-full"
+        className="absolute pointer-events-none rounded-full"
         style={{
-          width: 140, height: 140,
-          top: -10, left: -10,
-          background: 'radial-gradient(circle, rgba(232,197,71,0.35) 0%, rgba(255,160,122,0.12) 60%, transparent 80%)',
-          filter: 'blur(6px)',
+          width: 100, height: 28,
+          bottom: 42, left: 10,
+          background: 'radial-gradient(ellipse, rgba(200,150,180,0.32) 0%, transparent 70%)',
+          filter: 'blur(8px)',
         }}
-        variants={{ rest: { scale: 1, opacity: 0.6 }, hovered: { scale: 1.35, opacity: 1 } }}
+        animate={{ opacity: hovered ? 0.55 : 0.38, scaleX: hovered ? 1.1 : 1 }}
         transition={{ duration: 0.5 }}
       />
 
-      {/* Daisy SVG */}
+      {/* ── Layer 2: dreamy blush-pink glow halo behind the whole flower ── */}
+      {/* Gives the petals something to contrast against — like light through petals */}
+      <motion.div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: 200, height: 200,
+          top: -40, left: -40,
+          background: 'radial-gradient(circle, rgba(255,220,230,0.55) 0%, rgba(255,190,210,0.3) 35%, rgba(255,160,200,0.08) 65%, transparent 80%)',
+          filter: 'blur(18px)',
+        }}
+        animate={{ scale: hovered ? 1.2 : 1, opacity: hovered ? 0.9 : 0.7 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      />
+
+      {/* ── Daisy SVG ── */}
       <motion.svg
-        width="120"
-        height="120"
-        viewBox="-60 -60 120 120"
-        variants={{ rest: { rotate: 0 }, hovered: { rotate: 18 } }}
-        transition={{ duration: 1.2, ease: 'easeInOut' }}
+        width="120" height="130"
+        viewBox="-60 -58 120 130"
+        animate={{ rotate: hovered ? 14 : 0 }}
+        transition={{ duration: 1.6, ease: 'easeInOut' }}
       >
-        {/* Petal shadow ring */}
-        <circle cx={0} cy={0} r={38} fill="rgba(255,220,120,0.12)" />
-        {/* 12 petals for richer daisy */}
-        {Array.from({ length: 12 }).map((_, i) => (
-          <motion.ellipse
-            key={i}
-            cx={0}
-            cy={-34}
-            rx={6}
-            ry={17}
-            fill={i % 2 === 0 ? '#FFFDE7' : '#FFF9C4'}
-            stroke="#d4a844"
-            strokeWidth="0.5"
-            opacity={0.95}
-            style={{ originX: '0px', originY: '0px' }}
-            transform={`rotate(${i * 30})`}
-            variants={{
-              rest: { ry: 17, opacity: 0.94 },
-              hovered: { ry: 21, opacity: 1 },
-            }}
-            transition={{ duration: 0.45, ease: 'easeOut' }}
-          />
-        ))}
-        {/* Warm golden center */}
-        <motion.circle
-          cx={0} cy={0} r={12}
-          fill="url(#daisyGold)"
-          variants={{ rest: { r: 12 }, hovered: { r: 15 } }}
-          transition={{ duration: 0.5 }}
-        />
-        {/* Center texture */}
-        {[[0,0],[4,3],[-4,3],[0,-5],[5,-3],[-5,-3],[3,-1],[-3,1]].map(([x,y],i) => (
-          <circle key={i} cx={x} cy={y} r={1} fill="#7a4a00" opacity={0.45} />
-        ))}
         <defs>
-          <radialGradient id="daisyGold" cx="40%" cy="35%">
-            <stop offset="0%" stopColor="#FFE066" />
-            <stop offset="100%" stopColor="#E8A020" />
+          {/*
+            Per-petal gradient: pure white at tip fading to a very soft
+            blush-pink at the base where petals converge at center.
+            This gives each petal definition and makes the centre feel
+            lush without any disc shape.
+          */}
+          {Array.from({ length: PETAL_COUNT }).map((_, i) => {
+            const angle = i * (360 / PETAL_COUNT)
+            const rad = (angle * Math.PI) / 180
+            // Tip = outermost point of ellipse
+            const tx = Math.sin(rad) * (PETAL_RY * 2 + 2)
+            const ty = -Math.cos(rad) * (PETAL_RY * 2 + 2)
+            // Base = centre of flower
+            const bx = 0
+            const by = 0
+            return (
+              <linearGradient
+                key={i}
+                id={`pg${i}`}
+                gradientUnits="userSpaceOnUse"
+                x1={tx} y1={ty}
+                x2={bx} y2={by}
+              >
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" /> {/* tip: pure white */}
+                <stop offset="50%" stopColor="#FEFEFF" stopOpacity="1" /> {/* mid: white */}
+                <stop offset="82%" stopColor="#FFF0F4" stopOpacity="1" /> {/* near base: blush tint */}
+                <stop offset="100%" stopColor="#FADADD" stopOpacity="0.9" /> {/* base: soft rose */}
+              </linearGradient>
+            )
+          })}
+
+          {/*
+            Centre glow: no disc shape — just a soft radial blush
+            that bleeds outward, making the petal convergence feel
+            warm and luminous rather than empty.
+          */}
+          <radialGradient id="centreGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#FFD6E0" stopOpacity="0.95" />
+            <stop offset="45%" stopColor="#FFCCD8" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#FFB8CC" stopOpacity="0" />
           </radialGradient>
+
+          {/* Per-petal shadow: each petal casts a gentle shadow on its neighbours */}
+          <filter id="ps" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="1.2" stdDeviation="1.8"
+              floodColor="#C08090" floodOpacity="0.2" />
+          </filter>
+
+          {/* Whole-flower lift shadow */}
+          <filter id="fs" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="5" stdDeviation="7"
+              floodColor="#C06080" floodOpacity="0.18" />
+          </filter>
         </defs>
+
+        {/* Whole-flower shadow group */}
+        <g style={{ filter: 'url(#fs)' }}>
+
+          {/* ── Back petal layer (offset by half step, slightly smaller) ── */}
+          {Array.from({ length: PETAL_COUNT }).map((_, i) => {
+            const angle = i * (360 / PETAL_COUNT) + (360 / PETAL_COUNT / 2)
+            return (
+              <g key={`b${i}`} transform={`rotate(${angle})`}>
+                <ellipse
+                  cx={0} cy={PETAL_CY}
+                  rx={PETAL_RX * 0.78}
+                  ry={PETAL_RY * 0.9}
+                  fill="#F8E8EE"
+                  opacity={0.5}
+                />
+              </g>
+            )
+          })}
+
+          {/* ── Front petal layer ── */}
+          {Array.from({ length: PETAL_COUNT }).map((_, i) => {
+            const angle = i * (360 / PETAL_COUNT)
+            return (
+              <g key={i} transform={`rotate(${angle})`} style={{ filter: 'url(#ps)' }}>
+                <motion.ellipse
+                  cx={0}
+                  cy={PETAL_CY}
+                  rx={PETAL_RX}
+                  ry={PETAL_RY}
+                  fill={`url(#pg${i})`}
+                  stroke="rgba(200,160,180,0.2)"
+                  strokeWidth="0.25"
+                  animate={{
+                    ry: hovered ? PETAL_RY * 1.08 : PETAL_RY,
+                    opacity: hovered ? 1 : 0.96,
+                  }}
+                  transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.008 }}
+                />
+              </g>
+            )
+          })}
+
+          {/* ── Centre glow — replaces disc, blends petal bases elegantly ── */}
+          <motion.circle
+            cx={0} cy={0}
+            fill="url(#centreGlow)"
+            animate={{ r: hovered ? 18 : 15 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          />
+
+        </g>{/* end flower shadow group */}
+
+        {/* ── Stem ── */}
+        <path
+          d="M0,44 C0.5,52 -1.5,60 0,68"
+          stroke="#8ac870"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          opacity="0.75"
+          fill="none"
+        />
+        {/* Leaf */}
+        <ellipse cx={-6} cy={58} rx={8} ry={3.2}
+          fill="#8ac870" opacity={0.65}
+          transform="rotate(-38,-6,58)" />
       </motion.svg>
 
       {/* BEGIN label */}
       <motion.span
         className="font-sans text-xs font-semibold"
-        style={{
-          letterSpacing: '0.38em',
-          color: '#7C3D55',
-          textTransform: 'uppercase',
-        }}
-        variants={{
-          rest: { opacity: 0.7, y: 0, color: '#7C3D55' },
-          hovered: { opacity: 1, y: 3, color: '#C0355A' },
-        }}
+        style={{ letterSpacing: '0.38em', color: '#7C3D55', textTransform: 'uppercase' }}
+        animate={{ opacity: hovered ? 1 : 0.7, y: hovered ? 3 : 0 }}
         transition={{ duration: 0.3 }}
       >
         Begin
@@ -462,15 +559,15 @@ const PETALS = [
   { color: '#F4A0C0', size: 14, startX: 10, startY: 75, duration: 9, delay: 0.5, shape: 'round' as const },
   { color: '#FFB347', size: 10, startX: 22, startY: 80, duration: 11, delay: 2.0, shape: 'ellipse' as const },
   { color: '#C47FE8', size: 12, startX: 85, startY: 78, duration: 10, delay: 1.2, shape: 'fan' as const },
-  { color: '#E8647A', size: 9,  startX: 73, startY: 82, duration: 8,  delay: 3.1, shape: 'round' as const },
+  { color: '#E8647A', size: 9, startX: 73, startY: 82, duration: 8, delay: 3.1, shape: 'round' as const },
   { color: '#FFD1DC', size: 13, startX: 40, startY: 88, duration: 12, delay: 0.8, shape: 'ellipse' as const },
-  { color: '#A0C8FF', size: 10, startX: 58, startY: 85, duration: 9,  delay: 4.0, shape: 'round' as const },
+  { color: '#A0C8FF', size: 10, startX: 58, startY: 85, duration: 9, delay: 4.0, shape: 'round' as const },
   { color: '#F9B8D0', size: 11, startX: 92, startY: 70, duration: 10, delay: 1.8, shape: 'fan' as const },
-  { color: '#FFB3D1', size: 8,  startX: 5,  startY: 65, duration: 13, delay: 2.5, shape: 'ellipse' as const },
+  { color: '#FFB3D1', size: 8, startX: 5, startY: 65, duration: 13, delay: 2.5, shape: 'ellipse' as const },
   { color: '#D4A0FF', size: 13, startX: 65, startY: 90, duration: 11, delay: 0.3, shape: 'round' as const },
-  { color: '#FFCBA4', size: 9,  startX: 48, startY: 83, duration: 9,  delay: 5.0, shape: 'fan' as const },
+  { color: '#FFCBA4', size: 9, startX: 48, startY: 83, duration: 9, delay: 5.0, shape: 'fan' as const },
   { color: '#F4507A', size: 11, startX: 30, startY: 77, duration: 10, delay: 1.5, shape: 'round' as const },
-  { color: '#E8C547', size: 10, startX: 78, startY: 86, duration: 8,  delay: 3.5, shape: 'ellipse' as const },
+  { color: '#E8C547', size: 10, startX: 78, startY: 86, duration: 8, delay: 3.5, shape: 'ellipse' as const },
 ]
 
 // ─────────────────────────────────────────────
@@ -520,7 +617,6 @@ export default function HeroStage({ onBegin }: { onBegin: () => void }) {
         transition={{ duration: 0.9, delay: 0.4 }}
         className="mb-6 flex gap-5 items-center"
       >
-        {/* Inline mini SVG flowers */}
         <svg width="28" height="28" viewBox="-14 -14 28 28"><Rose cx={0} cy={0} r={12} color="#E8647A" delay={0.6} /></svg>
         <svg width="22" height="22" viewBox="-11 -11 22 22"><Orchid cx={0} cy={0} r={10} color="#C47FE8" delay={0.7} /></svg>
         <svg width="26" height="26" viewBox="-13 -13 26 26"><Peony cx={0} cy={0} r={12} color="#F4A0C0" delay={0.8} /></svg>
@@ -533,11 +629,12 @@ export default function HeroStage({ onBegin }: { onBegin: () => void }) {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, ease: 'easeOut', delay: 0.55 }}
-        className="mb-4 text-center font-serif"
+        className="mb-4 text-center"
         style={{
+          fontFamily: "'Cormorant Garamond', 'Cormorant', 'IM Fell English', Georgia, serif",
           fontSize: 'clamp(5rem, 14vw, 9rem)',
           fontWeight: 300,
-          letterSpacing: '-0.02em',
+          letterSpacing: '-0.01em',
           lineHeight: 1,
           fontStyle: 'italic',
           background: 'linear-gradient(135deg, #C0355A 0%, #9B2080 45%, #5E3DB3 100%)',
